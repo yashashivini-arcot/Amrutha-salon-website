@@ -19,7 +19,7 @@ const OtherTreatments = () => {
       price: "₹3,499 onwards",
       badge: "Cosmetic Pigment",
       bgImage: pmuImg,
-      objectPosition: "center",
+      objectPosition: "center 75%",
       whatsappType: "PMU Services Consultation"
     },
     {
