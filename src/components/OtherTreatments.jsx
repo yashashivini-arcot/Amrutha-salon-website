@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Sparkles, HeartHandshake } from 'lucide-react';
 import { WHATSAPP_NUMBER } from '../data/servicesData';
-import pmuImg from '../assets/pmu-services-new.png';
-import laserClinicImg from '../assets/laser-treatment-new.png';
+import pmuImg from '../assets/pmu services.jpeg';
+import laserClinicImg from '../assets/laser clinic.jpeg';
 
 const OtherTreatments = () => {
   const treatments = [
@@ -19,7 +19,7 @@ const OtherTreatments = () => {
       price: "₹3,499 onwards",
       badge: "Cosmetic Pigment",
       bgImage: pmuImg,
-      objectPosition: "center 30%",
+      objectPosition: "center 75%",
       whatsappType: "PMU Services Consultation"
     },
     {
@@ -34,7 +34,7 @@ const OtherTreatments = () => {
       price: "₹1,500 onwards",
       badge: "Laser Clinic",
       bgImage: laserClinicImg,
-      objectPosition: "center 40%",
+      objectPosition: "center",
       whatsappType: "Laser & Skin Corrections Consultation"
     }
   ];
