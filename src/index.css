@@ -1,0 +1,282 @@
+/* Global Luxury Spa CSS Design System for Amrutha Salon */
+
+:root {
+  /* Premium Colors */
+  --bg-ivory: #FAF9F6;           /* Soft muted white/ivory */
+  --bg-pure: #FFFFFF;            /* Pure white for cards */
+  --text-main: #1D2A26;          /* Deep rich slate green for headings and focus text */
+  --text-secondary: #586B65;     /* Soft muted slate green for body copy */
+  --primary-teal: #0D6E6E;       /* Main Luxury Teal */
+  --primary-teal-light: rgba(13, 110, 110, 0.06);
+  --primary-teal-opaque: rgba(13, 110, 110, 0.1);
+  --primary-teal-hover: #0A5454;
+  --accent-lavender: #8E7DBE;    /* Lilac/lavender accent */
+  --accent-lavender-bg: #EAE6F3;
+  --accent-lavender-light: #F6F4FB;
+  --champagne-gold: #C5A880;     /* Minimal Champagne Gold highlight */
+  --champagne-gold-light: #F4EFE6;
+  --champagne-gold-hover: #A3845A;
+  --border-gold: rgba(197, 168, 128, 0.25);
+  --border-light: rgba(13, 110, 110, 0.08);
+
+  /* Typography */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+
+  /* Shadows */
+  --shadow-subtle: 0 8px 30px rgba(13, 110, 110, 0.02);
+  --shadow-premium: 0 20px 40px rgba(29, 42, 38, 0.05);
+  --shadow-gold: 0 10px 30px rgba(197, 168, 128, 0.12);
+  --shadow-floating: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-luxury: all 0.5s cubic-bezier(0.25, 1, 0.3, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-ivory);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  color: var(--text-main);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-fast);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Custom Elegant Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-ivory);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--champagne-gold);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-teal);
+}
+
+/* Reusable Layout Utilities */
+.section {
+  padding: 100px 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 0;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0; /* Luxury sharp edge or very subtle border-radius */
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-luxury);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background-color: var(--primary-teal);
+  color: var(--bg-pure);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+
+.btn-primary:hover::after {
+  transform: translateX(0);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-teal-hover);
+  box-shadow: 0 10px 20px rgba(13, 110, 110, 0.15);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--text-main);
+}
+
+.btn-secondary:hover {
+  background-color: var(--text-main);
+  color: var(--bg-ivory);
+}
+
+.btn-gold {
+  background-color: transparent;
+  color: var(--champagne-gold);
+  border: 1px solid var(--champagne-gold);
+}
+
+.btn-gold:hover {
+  background-color: var(--champagne-gold);
+  color: var(--bg-pure);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Glassmorphism Styles */
+.glass {
+  background: rgba(253, 251, 249, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Badge highlights */
+.badge-gold {
+  background-color: var(--champagne-gold-light);
+  color: var(--champagne-gold-hover);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  display: inline-block;
+  font-family: var(--font-sans);
+}
+
+.badge-lavender {
+  background-color: var(--accent-lavender-light);
+  color: var(--accent-lavender);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  display: inline-block;
+  font-family: var(--font-sans);
+}
+
+/* Section Header styling */
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 60px;
+}
+
+.section-header span {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--champagne-gold);
+  letter-spacing: 0.2em;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-size: 38px;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.section-header h2::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background-color: var(--champagne-gold);
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.section-header p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .section-header h2 {
+    font-size: 28px;
+  }
+}
+
+/* Input Fields styling */
+.form-input {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--bg-pure);
+  border: 1px solid var(--border-light);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text-main);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.form-input:focus {
+  border-color: var(--champagne-gold);
+  box-shadow: 0 0 0 3px rgba(197, 168, 128, 0.08);
+}
