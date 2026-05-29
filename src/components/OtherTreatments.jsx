@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Sparkles, HeartHandshake } from 'lucide-react';
 import { WHATSAPP_NUMBER } from '../data/servicesData';
-import pmuImg from '../assets/pmu services.jpeg';
-import laserClinicImg from '../assets/laser clinic.jpeg';
+import pmuImg from '../assets/pmu-services-new.png';
+import laserClinicImg from '../assets/laser-treatment-new.png';
 
 const OtherTreatments = () => {
   const treatments = [
@@ -19,7 +19,7 @@ const OtherTreatments = () => {
       price: "₹3,499 onwards",
       badge: "Cosmetic Pigment",
       bgImage: pmuImg,
-      objectPosition: "center 75%",
+      objectPosition: "center 30%",
       whatsappType: "PMU Services Consultation"
     },
     {
@@ -34,7 +34,7 @@ const OtherTreatments = () => {
       price: "₹1,500 onwards",
       badge: "Laser Clinic",
       bgImage: laserClinicImg,
-      objectPosition: "center",
+      objectPosition: "center 40%",
       whatsappType: "Laser & Skin Corrections Consultation"
     }
   ];
@@ -76,12 +76,32 @@ const OtherTreatments = () => {
               className="treatment-highlight-card"
             >
               {/* Header Image Block */}
-              <div style={{ height: '240px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
                 <img
                   src={t.bgImage}
                   alt={t.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: t.objectPosition || 'center' }}
+                  className="treatment-card-img"
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'cover', 
+                    objectPosition: t.objectPosition || 'center',
+                    transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                  }}
                 />
+                {/* Elegant Luxury Softening Overlay */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 0%, rgba(29, 42, 38, 0.22) 100%)',
+                  pointerEvents: 'none',
+                  mixBlendMode: 'multiply'
+                }} />
+                {/* Glass Reflection Sweep Accent */}
+                <div className="glass-reflection-sweep" />
                 <div style={{
                   position: 'absolute',
                   top: '16px',
