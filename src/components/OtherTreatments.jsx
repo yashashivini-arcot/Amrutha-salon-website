@@ -81,11 +81,11 @@ const OtherTreatments = () => {
                   src={t.bgImage}
                   alt={t.title}
                   className="treatment-card-img"
-                  style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    objectFit: 'cover', 
-                    objectPosition: t.objectPosition || 'center',
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: t.objectPosition || 'center 90%',
                     transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 />
