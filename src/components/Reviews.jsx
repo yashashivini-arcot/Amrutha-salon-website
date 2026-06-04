@@ -13,6 +13,7 @@ const Reviews = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Fetch reviews on component mount
   useEffect(() => {
@@ -99,6 +100,8 @@ const Reviews = () => {
       setIsSubmitting(false);
     }
   };
+
+  const displayedReviews = isExpanded ? reviews : reviews.slice(0, 3);
 
   return (
     <section id="reviews" className="section" style={{ backgroundColor: 'var(--bg-pure)', position: 'relative', borderBottom: '1px solid var(--border-light)' }}>
@@ -349,7 +352,7 @@ const Reviews = () => {
                 </p>
               </motion.div>
             ) : (
-              reviews.map((review) => {
+              displayedReviews.map((review) => {
                 return (
                   <motion.div
                     key={review.id}
@@ -433,6 +436,37 @@ const Reviews = () => {
             )}
           </AnimatePresence>
         </div>
+
+        {reviews.length > 3 && (
+          <div style={{ textAlign: 'center', marginTop: '24px' }}>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="btn btn-secondary"
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--border-gold)',
+                color: 'var(--text-main)',
+                padding: '12px 30px',
+                fontSize: '12px',
+                fontWeight: '600',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'var(--bg-ivory)';
+                e.target.style.borderColor = 'var(--text-main)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.borderColor = 'var(--border-gold)';
+              }}
+            >
+              {isExpanded ? 'Show Less' : 'View All Reviews'}
+            </button>
+          </div>
+        )}
 
       </div>
     </section>
