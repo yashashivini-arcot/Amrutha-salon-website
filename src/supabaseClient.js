@@ -10,4 +10,4 @@ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('your-project-id'))
   );
 }
 
-export const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder');
+export const supabase = createClient(supabaseUrl ||'https://ppbembuakzcjpzngivaa.supabase.co/rest/v1/ ', supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwYmVtYnVha3pjanB6bmdpdmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTY1ODQsImV4cCI6MjA5NjEzMjU4NH0.79G4-jGcBeb2URlzZI9JfW9aeMVZt4dF9Wz8KdZ2J4w');
