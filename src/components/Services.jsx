@@ -1,25 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, Star, ArrowRight, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { Clock, Star, ArrowRight, Sparkles, ChevronDown, ChevronUp, Plus, Check } from 'lucide-react';
 import { womenServices, menServices, WHATSAPP_NUMBER } from '../data/servicesData';
 
-const Services = () => {
+const Services = ({ selectedServices = [], onToggleService }) => {
   const [expandedWomenCategory, setExpandedWomenCategory] = useState(null);
   const [expandedMenCategory, setExpandedMenCategory] = useState(null);
 
-  // Dynamic booking redirect to WhatsApp with prefilled, URL-safe details
-  const handleBooking = (service, gender) => {
-    let message = "";
-    
-    if (gender === 'women') {
-      message = `Hi, I would like to book a ${service.title} appointment from the Women's Services menu. Please share available timings.`;
-    } else {
-      message = `Hi, I would like to book a Gentlemen's ${service.title} appointment from the Men's Services menu. Please share available timings.`;
+  // Toggle booking selection instead of immediate WhatsApp redirect
+  const handleToggle = (service, gender) => {
+    if (onToggleService) {
+      onToggleService(service, gender === 'women' ? 'Women' : 'Men');
     }
-
-    const encodedMessage = encodeURIComponent(message);
-    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
-    window.open(waUrl, '_blank');
   };
 
   const handleWomenToggle = (categoryName) => {
@@ -111,13 +103,25 @@ const Services = () => {
                                 
                                 <div className="card-footer">
                                   <span className="card-price">{service.price}</span>
-                                  <button
-                                    className="btn btn-primary card-btn"
-                                    onClick={() => handleBooking(service, 'women')}
-                                  >
-                                    Book Now
-                                    <ArrowRight size={11} style={{ marginLeft: '6px' }} />
-                                  </button>
+                                  {(() => {
+                                    const isSelected = selectedServices.some(s => s.id === service.id);
+                                    return (
+                                      <button
+                                        className={`btn card-btn ${isSelected ? 'btn-selected' : 'btn-primary'}`}
+                                        onClick={() => handleToggle(service, 'women')}
+                                      >
+                                        {isSelected ? (
+                                          <>
+                                            Added <Check size={11} style={{ marginLeft: '6px' }} />
+                                          </>
+                                        ) : (
+                                          <>
+                                            Add Service <Plus size={11} style={{ marginLeft: '6px' }} />
+                                          </>
+                                        )}
+                                      </button>
+                                    );
+                                  })()}
                                 </div>
                               </div>
                             </div>
@@ -204,13 +208,25 @@ const Services = () => {
                                 
                                 <div className="card-footer">
                                   <span className="card-price">{service.price}</span>
-                                  <button
-                                    className="btn btn-primary card-btn"
-                                    onClick={() => handleBooking(service, 'men')}
-                                  >
-                                    Book Now
-                                    <ArrowRight size={11} style={{ marginLeft: '6px' }} />
-                                  </button>
+                                  {(() => {
+                                    const isSelected = selectedServices.some(s => s.id === service.id);
+                                    return (
+                                      <button
+                                        className={`btn card-btn ${isSelected ? 'btn-selected' : 'btn-primary'}`}
+                                        onClick={() => handleToggle(service, 'men')}
+                                      >
+                                        {isSelected ? (
+                                          <>
+                                            Added <Check size={11} style={{ marginLeft: '6px' }} />
+                                          </>
+                                        ) : (
+                                          <>
+                                            Add Service <Plus size={11} style={{ marginLeft: '6px' }} />
+                                          </>
+                                        )}
+                                      </button>
+                                    );
+                                  })()}
                                 </div>
                               </div>
                             </div>

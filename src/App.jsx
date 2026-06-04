@@ -11,6 +11,7 @@ import Reviews from './components/Reviews';
 import ContactMap from './components/ContactMap';
 import FloatingWA from './components/FloatingWA';
 import FloatingIG from './components/FloatingIG';
+import BookingCart from './components/BookingCart';
 import { Phone, MapPin, Clock } from 'lucide-react';
 import logoImg from './assets/logo.webp';
 import './App.css';
@@ -55,6 +56,26 @@ const Facebook = ({ size = 20, ...props }) => (
 
 function App() {
   const [activeSection, setActiveSection] = useState('women');
+  const [selectedServices, setSelectedServices] = useState([]);
+
+  const handleToggleService = (service, section) => {
+    setSelectedServices(prev => {
+      const exists = prev.some(item => item.id === service.id);
+      if (exists) {
+        return prev.filter(item => item.id !== service.id);
+      } else {
+        return [...prev, { ...service, section }];
+      }
+    });
+  };
+
+  const handleRemoveService = (service) => {
+    setSelectedServices(prev => prev.filter(item => item.id !== service.id));
+  };
+
+  const handleClearAll = () => {
+    setSelectedServices([]);
+  };
 
   // Monitor scroll using Intersection Observer to dynamically highlight navbar links
   useEffect(() => {
@@ -99,13 +120,13 @@ function App() {
         <NailPromotionalBanner />
 
         {/* 2. Services Block (includes Women at #women and Men at #men sequential sections) */}
-        <Services />
+        <Services selectedServices={selectedServices} onToggleService={handleToggleService} />
 
         {/* 3. Dedicated stand-alone Nail Studio Section (#nail-studio) */}
-        <NailStudio />
+        <NailStudio selectedServices={selectedServices} onToggleService={handleToggleService} />
 
         {/* 4. Other Treatments Aesthetic Clinical Block (#other-treatments) */}
-        <OtherTreatments />
+        <OtherTreatments selectedServices={selectedServices} onToggleService={handleToggleService} />
 
         {/* 6. Visual Portfolio & Mock Insta Block */}
         <Gallery />
@@ -120,6 +141,13 @@ function App() {
       {/* 8. Elegant Sticky WhatsApp & Instagram Widgets */}
       <FloatingWA />
       <FloatingIG />
+
+      {/* 8.5. Service Selection Cart */}
+      <BookingCart
+        selectedServices={selectedServices}
+        onRemoveService={handleRemoveService}
+        onClearAll={handleClearAll}
+      />
 
       {/* 9. Premium Editorial Footer */}
       <footer className="footer">

@@ -1,18 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Heart, ShieldCheck, Gem, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { Calendar, Heart, ShieldCheck, Gem, ArrowRight, ArrowLeft, Sparkles, Plus, Check } from 'lucide-react';
 import { nailServices, WHATSAPP_NUMBER } from '../data/servicesData';
 
-const NailStudio = () => {
+const NailStudio = ({ selectedServices = [], onToggleService }) => {
   const [activeSubCategory, setActiveSubCategory] = useState('Gel Polish');
   const scrollContainerRef = useRef(null);
 
   // Group items by subcategory
   const subCategories = ["Gel Polish", "Acrylic Extensions", "Nail Art", "Premium Nail Designs"];
 
-  const handleBooking = (service) => {
-    const message = `Hi, I would like to book a luxury session for ${service.title} at Sri Sai Amrutha Salon and beauty solutions. Please share available timings.`;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+  // Toggle booking selection instead of immediate WhatsApp redirect
+  const handleToggle = (service) => {
+    if (onToggleService) {
+      onToggleService(service, 'Nail Studio');
+    }
   };
 
   const handleGeneralBooking = () => {
@@ -120,13 +122,25 @@ const NailStudio = () => {
                           <span className="currency">₹</span>
                           <span className="value">{item.price}</span>
                         </div>
-                        <button 
-                          className="btn btn-primary nail-booking-btn"
-                          onClick={() => handleBooking(item)}
-                        >
-                          Book Now
-                          <ArrowRight size={12} style={{ marginLeft: '6px' }} />
-                        </button>
+                        {(() => {
+                          const isSelected = selectedServices.some(s => s.id === item.id);
+                          return (
+                            <button 
+                              className={`btn nail-booking-btn ${isSelected ? 'btn-selected' : 'btn-primary'}`}
+                              onClick={() => handleToggle(item)}
+                            >
+                              {isSelected ? (
+                                <>
+                                  Added <Check size={12} style={{ marginLeft: '6px' }} />
+                                </>
+                              ) : (
+                                <>
+                                  Add Service <Plus size={12} style={{ marginLeft: '6px' }} />
+                                </>
+                              )}
+                            </button>
+                          );
+                        })()}
                       </div>
                     </div>
                   </motion.div>
