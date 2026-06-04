@@ -350,3 +350,17 @@
     z-index: 1000;
   }
 }
+
+/* Selected Service Button Style */
+.btn-selected {
+  background-color: var(--champagne-gold) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--champagne-gold) !important;
+}
+
+.btn-selected:hover {
+  background-color: var(--champagne-gold-hover) !important;
+  color: var(--bg-pure) !important;
+  border-color: var(--champagne-gold-hover) !important;
+}
+

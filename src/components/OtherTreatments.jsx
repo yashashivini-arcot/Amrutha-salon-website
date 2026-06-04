@@ -1,13 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Sparkles, HeartHandshake } from 'lucide-react';
+import { Shield, Sparkles, HeartHandshake, Plus, Check } from 'lucide-react';
 import { WHATSAPP_NUMBER } from '../data/servicesData';
 import pmuImg from '../assets/pmu services.jpeg';
 import laserClinicImg from '../assets/laser clinic.jpeg';
 
-const OtherTreatments = () => {
+const OtherTreatments = ({ selectedServices = [], onToggleService }) => {
   const treatments = [
     {
+      id: "ot-pmu",
       title: "PMU Services (Permanent Make-Up)",
       description: "Define your geometry and restore facial symmetry with semi-permanent pigments formulated for a lasting, organic glow.",
       features: [
@@ -23,6 +24,7 @@ const OtherTreatments = () => {
       whatsappType: "PMU Services Consultation"
     },
     {
+      id: "ot-laser",
       title: "Laser Clinic & Skin Corrections",
       description: "Medical-grade laser treatments targeting permanent body hair reduction and professional skin growth removals.",
       features: [
@@ -149,13 +151,26 @@ const OtherTreatments = () => {
                     <span style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-main)' }}>{t.price}</span>
                   </div>
 
-                  <button
-                    className="btn btn-primary"
-                    style={{ padding: '10px 20px', fontSize: '12px' }}
-                    onClick={() => handleBooking(t.title)}
-                  >
-                    Consult via WhatsApp
-                  </button>
+                  {(() => {
+                    const isSelected = selectedServices.some(s => s.id === t.id);
+                    return (
+                      <button
+                        className={`btn ${isSelected ? 'btn-selected' : 'btn-primary'}`}
+                        style={{ padding: '10px 20px', fontSize: '12px' }}
+                        onClick={() => onToggleService({ id: t.id, title: t.title, price: t.price, category: t.badge }, 'Other Treatments')}
+                      >
+                        {isSelected ? (
+                          <>
+                            Added <Check size={12} style={{ marginLeft: '6px' }} />
+                          </>
+                        ) : (
+                          <>
+                            Add to Selection <Plus size={12} style={{ marginLeft: '6px' }} />
+                          </>
+                        )}
+                      </button>
+                    );
+                  })()}
                 </div>
               </div>
             </motion.div>
