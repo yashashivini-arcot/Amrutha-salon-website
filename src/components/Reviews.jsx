@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, MessageSquare, Plus, CheckCircle, Clock } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -9,63 +10,94 @@ const Reviews = () => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Load reviews from localStorage on mount
+  // Fetch reviews on component mount
   useEffect(() => {
-    const savedReviews = localStorage.getItem('amrutha_salon_client_reviews');
-    if (savedReviews) {
-      try {
-        setReviews(JSON.parse(savedReviews));
-      } catch (e) {
-        console.error("Failed to parse saved reviews", e);
-      }
-    }
+    fetchReviews();
   }, []);
 
-  // Save reviews to localStorage
-  const saveReviews = (updatedReviews) => {
-    localStorage.setItem('amrutha_salon_client_reviews', JSON.stringify(updatedReviews));
+  const fetchReviews = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        // Map database schema to frontend structure:
+        const mappedReviews = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          rating: item.rating,
+          text: item.review,
+          date: new Date(item.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          })
+        }));
+        setReviews(mappedReviews);
+      }
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+      setError('Could not retrieve reviews. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !comment.trim()) {
       alert("Please fill in both your name and review comment.");
       return;
     }
 
-    const newReview = {
-      id: Date.now(),
-      name: name.trim(),
-      rating: rating,
-      text: comment.trim(),
-      date: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
-    };
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('reviews')
+        .insert([
+          {
+            name: name.trim(),
+            rating: rating,
+            review: comment.trim()
+          }
+        ]);
 
-    const updatedReviews = [newReview, ...reviews];
-    setReviews(updatedReviews);
-    saveReviews(updatedReviews);
+      if (error) {
+        throw error;
+      }
 
-    // Reset Form
-    setName('');
-    setComment('');
-    setRating(5);
-    setSubmitSuccess(true);
-    
-    setTimeout(() => {
-      setSubmitSuccess(false);
-      setIsFormOpen(false);
-    }, 2000);
-  };
+      // Reset Form and show success
+      setName('');
+      setComment('');
+      setRating(5);
+      setSubmitSuccess(true);
+      
+      // Refresh reviews list to show the new review immediately
+      await fetchReviews();
 
-  const handleDeleteReview = (id) => {
-    const updated = reviews.filter(r => r.id !== id);
-    setReviews(updated);
-    saveReviews(updated);
+      setTimeout(() => {
+        setSubmitSuccess(false);
+        setIsFormOpen(false);
+      }, 2000);
+
+    } catch (err) {
+      console.error('Error submitting review:', err);
+      alert('Failed to submit review: ' + err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -211,9 +243,17 @@ const Reviews = () => {
                     <button
                       type="submit"
                       className="btn btn-primary"
-                      style={{ width: '100%', padding: '14px 0', fontWeight: '600', letterSpacing: '0.1em' }}
+                      disabled={isSubmitting}
+                      style={{
+                        width: '100%',
+                        padding: '14px 0',
+                        fontWeight: '600',
+                        letterSpacing: '0.1em',
+                        opacity: isSubmitting ? 0.7 : 1,
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer'
+                      }}
                     >
-                      Submit Feedback
+                      {isSubmitting ? 'Submitting Reflection...' : 'Submit Feedback'}
                     </button>
                   </div>
                 )}
@@ -225,7 +265,70 @@ const Reviews = () => {
         {/* Comments Feed List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <AnimatePresence>
-            {reviews.length === 0 ? (
+            {isLoading ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{
+                  background: 'var(--bg-ivory)',
+                  border: '1px solid var(--border-light)',
+                  padding: '50px 30px',
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}
+              >
+                <div style={{
+                  width: '24px',
+                  height: '24px',
+                  border: '2px solid rgba(20, 93, 91, 0.1)',
+                  borderTop: '2px solid var(--primary-teal)',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <style>{`
+                  @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                  }
+                `}</style>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', margin: 0 }}>
+                  Retrieving guest reflections...
+                </p>
+              </motion.div>
+            ) : error ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{
+                  background: 'var(--bg-ivory)',
+                  border: '1px dashed #d9534f',
+                  padding: '30px',
+                  textAlign: 'center',
+                  color: '#d9534f'
+                }}
+              >
+                <p style={{ fontSize: '14px', margin: 0 }}>{error}</p>
+                <button 
+                  onClick={fetchReviews}
+                  style={{
+                    marginTop: '12px',
+                    background: 'var(--primary-teal)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 16px',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Retry
+                </button>
+              </motion.div>
+            ) : reviews.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -311,25 +414,6 @@ const Reviews = () => {
                           </span>
                         </div>
                       </div>
-
-                      {/* Optional Delete Button for demo management */}
-                      <button
-                        onClick={() => handleDeleteReview(review.id)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: 'var(--text-secondary)',
-                          fontSize: '11px',
-                          opacity: 0.5,
-                          cursor: 'pointer',
-                          textDecoration: 'underline',
-                          padding: '4px'
-                        }}
-                        onMouseEnter={(e) => e.target.style.opacity = 1}
-                        onMouseLeave={(e) => e.target.style.opacity = 0.5}
-                      >
-                        Delete
-                      </button>
                     </div>
 
                     {/* Comment Body */}
